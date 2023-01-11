@@ -191,7 +191,26 @@ public class ClientLockerService {
         return false;
 
     }
+
+
+
+    public List<Long> getLockerManIdWhichAreGoHome(){
+
+     return  checkClientIsNotAboutFinish(getAllManClientLockers()).stream()
+                .map(l->l.getLocker().getLockerId())
+                .toList();
+    }
+
+    public List<Long> getLockerWomenIdWhichAreGoHome(){
+
+        return  checkClientIsNotAboutFinish(getAllWomanClientLockers()).stream()
+                .map(l->l.getLocker().getLockerId())
+                .toList();
+    }
+
 }
+
+
 
 //
 //    private List<Long> checkClientIsNotAboutFinishLockerId(boolean isAWoman) {

@@ -33,21 +33,27 @@ public class ClientLockerController {
         return clientLockerService.getAllWomanClientLocker();
     }
 
-    @GetMapping("/womans")
-    public List<ClientLockerDto> getAllWomansClients() {
+    @GetMapping("/women")
+    public List<ClientLockerDto> getAllWomenClients() {
         return clientLockerService.checkClientIsNotAboutFinishDtoWoman();
     }
 
-    @GetMapping("/mans")
-    public List<ClientLockerDto> getAllMansClients() {
+    @GetMapping("/women/id")
+    public List<Long> getAllWomenId() {
+        return clientLockerService.getLockerWomenIdWhichAreGoHome();
+    }
+
+
+    @GetMapping("/men")
+    public List<ClientLockerDto> getAllMenClients() {
         return clientLockerService.checkClientIsNotAboutFinishDtoMan();
     }
-//    @GetMapping("/{id}")
-//    public int getAverageTimeClient(@PathVariable Long id) {
-//
-//        return clientLockerService.getAverageTime(id);
-//    }
 
+
+    @GetMapping("/men/id")
+    public List<Long> getAllMenId() {
+        return clientLockerService.getLockerManIdWhichAreGoHome();
+    }
     @PostMapping
     public ClientLockerDto save(@RequestParam Long clientId) {
         return clientLockerService.save(clientId);
