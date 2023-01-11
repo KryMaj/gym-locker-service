@@ -67,7 +67,7 @@ public class GymLockerServiceApplication {
             ClientLockerDto clientLockerDto3 = new ClientLockerDto(3L, 3l, 3l, Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf(LocalDateTime.now().plusHours(3l)));
             ClientLockerDto clientLockerDto4 = new ClientLockerDto(4L, 1l, 2l, Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf(LocalDateTime.now().plusHours(1l)));
             ClientLockerDto clientLockerDto5 = new ClientLockerDto(5L, 1l, 2l, Timestamp.valueOf(LocalDateTime.now()));
-            ClientLockerDto clientLockerDto6 = new ClientLockerDto(6L, 1l, 2l, Timestamp.valueOf(LocalDateTime.now()));
+            ClientLockerDto clientLockerDto6 = new ClientLockerDto(6L, 2l, 1l, Timestamp.valueOf(LocalDateTime.now()));
             ClientLockerDto clientLockerDto7 = new ClientLockerDto(7L, 3l, 3l, Timestamp.valueOf(LocalDateTime.now()));
             ClientLockerDto clientLockerDto8 = new ClientLockerDto(8L, 4l, 4l, Timestamp.valueOf(LocalDateTime.now().minusMinutes(6)));
 
