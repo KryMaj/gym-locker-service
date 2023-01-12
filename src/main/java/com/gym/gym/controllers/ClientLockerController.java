@@ -43,6 +43,10 @@ public class ClientLockerController {
         return clientLockerService.getLockerWomenIdWhichAreGoHome();
     }
 
+    @GetMapping("/woman/id")
+    public List<Long> getAllAvailableWomanId() {
+        return clientLockerService.getAvailableLockerWomanId();
+    }
 
     @GetMapping("/men")
     public List<ClientLockerDto> getAllMenClients() {
@@ -54,6 +58,11 @@ public class ClientLockerController {
     public List<Long> getAllMenId() {
         return clientLockerService.getLockerManIdWhichAreGoHome();
     }
+    @GetMapping("/man/id")
+    public List<Long> getAllAvailableManId() {
+        return clientLockerService.getAvailableLockerManId();
+    }
+
     @PostMapping
     public ClientLockerDto save(@RequestParam Long clientId) {
         return clientLockerService.save(clientId);
