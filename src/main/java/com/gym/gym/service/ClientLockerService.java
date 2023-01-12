@@ -201,6 +201,19 @@ public class ClientLockerService {
                 .toList();
     }
 
+    public List<Long> getAvailableLockerManId(){
+        return getAvailableManLockers().stream()
+                .map(Locker::getLockerId)
+                .toList();
+    }
+
+    public List<Long> getAvailableLockerWomanId(){
+        return getAvailableWomanLockers().stream()
+                .map(Locker::getLockerId)
+                .toList();
+    }
+
+
     public List<Long> getLockerWomenIdWhichAreGoHome(){
 
         return  checkClientIsNotAboutFinish(getAllWomanClientLockers()).stream()
