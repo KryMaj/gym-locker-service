@@ -48,6 +48,11 @@ public class ClientLockerController {
         return clientLockerService.getAvailableLockerWomanId();
     }
 
+    @GetMapping("/woman/justArrived")
+    public List<Long> getJustArrivedWoman(){
+        return clientLockerService.getLockerWomenIdWhichJustArrived();
+    }
+
     @GetMapping("/men")
     public List<ClientLockerDto> getAllMenClients() {
         return clientLockerService.checkClientIsNotAboutFinishDtoMan();
@@ -61,6 +66,11 @@ public class ClientLockerController {
     @GetMapping("/man/id")
     public List<Long> getAllAvailableManId() {
         return clientLockerService.getAvailableLockerManId();
+    }
+
+    @GetMapping("/man/justArrived")
+    public List<Long> getJustArrivedMan(){
+        return clientLockerService.getLockerMenIdWhichJustArrived();
     }
 
     @PostMapping

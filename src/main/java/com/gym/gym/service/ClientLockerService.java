@@ -221,6 +221,19 @@ public class ClientLockerService {
                 .toList();
     }
 
+    public List<Long> getLockerWomenIdWhichJustArrived(){
+        return getAllWomanClientLockers().stream()
+                .filter(c->c.getEntry().compareTo(Timestamp.valueOf(LocalDateTime.now().minusMinutes(5)))>0)
+                .map(c->c.getLocker().getLockerId())
+                .toList();
+    }
+
+    public List<Long> getLockerMenIdWhichJustArrived(){
+        return getAllManClientLockers().stream()
+                .filter(c->c.getEntry().compareTo(Timestamp.valueOf(LocalDateTime.now().minusMinutes(5)))>0)
+                .map(c->c.getLocker().getLockerId())
+                .toList();
+    }
 }
 
 
