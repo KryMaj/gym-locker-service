@@ -222,14 +222,16 @@ public class ClientLockerService {
     }
 
     public List<Long> getLockerWomenIdWhichJustArrived(){
-        return getAllWomanClientLockers().stream()
+        return clientLockerRepository.findAllByGoHomeIsNull().stream()
+                .filter(c->c.getClient().isAWoman())
                 .filter(c->c.getEntry().compareTo(Timestamp.valueOf(LocalDateTime.now().minusMinutes(5)))>0)
                 .map(c->c.getLocker().getLockerId())
                 .toList();
     }
 
     public List<Long> getLockerMenIdWhichJustArrived(){
-        return getAllManClientLockers().stream()
+        return clientLockerRepository.findAllByGoHomeIsNull().stream()
+                .filter(c->!c.getClient().isAWoman())
                 .filter(c->c.getEntry().compareTo(Timestamp.valueOf(LocalDateTime.now().minusMinutes(5)))>0)
                 .map(c->c.getLocker().getLockerId())
                 .toList();
