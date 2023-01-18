@@ -56,11 +56,17 @@ public class GymLockerServiceApplication {
             LockerDto locker2 = new LockerDto(2, true, true);
             LockerDto locker3 = new LockerDto(3, false, true);
             LockerDto locker4 = new LockerDto(4, false, true);
+            LockerDto locker5 = new LockerDto(5, false, true);
+            LockerDto locker6 = new LockerDto(6, false, true);
+            LockerDto locker7 = new LockerDto(7, false, true);
 
             lockerRepository.save(LockerMapper.toEntity(locker1));
             lockerRepository.save(LockerMapper.toEntity(locker2));
             lockerRepository.save(LockerMapper.toEntity(locker3));
             lockerRepository.save(LockerMapper.toEntity(locker4));
+            lockerRepository.save(LockerMapper.toEntity(locker5));
+            lockerRepository.save(LockerMapper.toEntity(locker6));
+            lockerRepository.save(LockerMapper.toEntity(locker7));
 
             ClientLockerDto clientLockerDto1 = new ClientLockerDto(1L, 1l, 1L, Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf(LocalDateTime.now().plusHours(1l)));
             ClientLockerDto clientLockerDto2 = new ClientLockerDto(2L, 2l, 2l, Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf(LocalDateTime.now().plusHours(2l)));

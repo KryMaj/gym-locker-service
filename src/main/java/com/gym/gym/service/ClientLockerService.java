@@ -15,8 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -235,6 +234,34 @@ public class ClientLockerService {
                 .filter(c->c.getEntry().compareTo(Timestamp.valueOf(LocalDateTime.now().minusMinutes(5)))>0)
                 .map(c->c.getLocker().getLockerId())
                 .toList();
+    }
+
+
+    public List<Long> getOptimalIdManLocker(){
+        List<Long> availableLocker = new LinkedList<>();
+
+        List<Long> finishLocker = getLockerManIdWhichAreGoHome();
+        List<Long> justArrivedLocker = getLockerMenIdWhichJustArrived();
+List<Long> finishAndJustArrived = new LinkedList<>();
+List<Long> goodLocker = new LinkedList<>();
+availableLocker.addAll(getAvailableLockerManId());
+
+
+finishAndJustArrived.addAll(finishLocker);
+finishAndJustArrived.addAll(justArrivedLocker);
+        Collections.sort(finishAndJustArrived);
+        Collections.sort(availableLocker);
+        for (int i = 0; i < availableLocker.size(); i++) {
+            for (int j = 0; j <finishAndJustArrived.size() ; j++) {
+                if (availableLocker.get(i) != (finishAndJustArrived.get(j) -1)){
+                    goodLocker.add(availableLocker.get(i));
+                    break;
+                }
+            }
+
+        }
+
+        return goodLocker;
     }
 }
 

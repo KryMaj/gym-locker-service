@@ -70,7 +70,8 @@ public class ClientLockerController {
 
     @GetMapping("/man/justArrived")
     public List<Long> getJustArrivedMan(){
-        return clientLockerService.getLockerMenIdWhichJustArrived();
+//        return clientLockerService.getLockerMenIdWhichJustArrived();
+      return clientLockerService.getOptimalIdManLocker();
     }
 
     @PostMapping
