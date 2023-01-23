@@ -67,11 +67,15 @@ public class ClientLockerController {
     public List<Long> getAllAvailableManId() {
         return clientLockerService.getAvailableLockerManId();
     }
+    @GetMapping("/test")
+    public Long test(){
+        return clientLockerService.getOptimalIdManLocker();
+    }
 
     @GetMapping("/man/justArrived")
     public List<Long> getJustArrivedMan(){
-//        return clientLockerService.getLockerMenIdWhichJustArrived();
-      return clientLockerService.getOptimalIdManLocker();
+        return clientLockerService.getLockerMenIdWhichJustArrived();
+//      return clientLockerService.getOptimalIdManLocker();
     }
 
     @PostMapping

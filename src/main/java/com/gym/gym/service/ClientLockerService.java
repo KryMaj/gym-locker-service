@@ -30,6 +30,10 @@ public class ClientLockerService {
 
     private final ClientLockerMapper clientLockerMapper;
 
+    private final List<Long> a = new ArrayList<>();
+    private final List<Long> b = new ArrayList<>();
+
+
     public List<ClientLockerDto> getACLDto() {
         return clientLockerRepository.findAll()
                 .stream()
@@ -192,79 +196,117 @@ public class ClientLockerService {
     }
 
 
+    public List<Long> getLockerManIdWhichAreGoHome() {
 
-    public List<Long> getLockerManIdWhichAreGoHome(){
-
-     return  checkClientIsNotAboutFinish(getAllManClientLockers()).stream()
-                .map(l->l.getLocker().getLockerId())
+        return checkClientIsNotAboutFinish(getAllManClientLockers()).stream()
+                .map(l -> l.getLocker().getLockerId())
                 .toList();
     }
 
-    public List<Long> getAvailableLockerManId(){
+    public List<Long> getAvailableLockerManId() {
         return getAvailableManLockers().stream()
                 .map(Locker::getLockerId)
                 .toList();
     }
 
-    public List<Long> getAvailableLockerWomanId(){
+    public List<Long> getAvailableLockerWomanId() {
         return getAvailableWomanLockers().stream()
                 .map(Locker::getLockerId)
                 .toList();
     }
 
 
-    public List<Long> getLockerWomenIdWhichAreGoHome(){
+    public List<Long> getLockerWomenIdWhichAreGoHome() {
 
-        return  checkClientIsNotAboutFinish(getAllWomanClientLockers()).stream()
-                .map(l->l.getLocker().getLockerId())
+        return checkClientIsNotAboutFinish(getAllWomanClientLockers()).stream()
+                .map(l -> l.getLocker().getLockerId())
                 .toList();
     }
 
-    public List<Long> getLockerWomenIdWhichJustArrived(){
+    public List<Long> getLockerWomenIdWhichJustArrived() {
         return clientLockerRepository.findAllByGoHomeIsNull().stream()
-                .filter(c->c.getClient().isAWoman())
-                .filter(c->c.getEntry().compareTo(Timestamp.valueOf(LocalDateTime.now().minusMinutes(5)))>0)
-                .map(c->c.getLocker().getLockerId())
+                .filter(c -> c.getClient().isAWoman())
+                .filter(c -> c.getEntry().compareTo(Timestamp.valueOf(LocalDateTime.now().minusMinutes(5))) > 0)
+                .map(c -> c.getLocker().getLockerId())
                 .toList();
     }
 
-    public List<Long> getLockerMenIdWhichJustArrived(){
+    public List<Long> getLockerMenIdWhichJustArrived() {
         return clientLockerRepository.findAllByGoHomeIsNull().stream()
-                .filter(c->!c.getClient().isAWoman())
-                .filter(c->c.getEntry().compareTo(Timestamp.valueOf(LocalDateTime.now().minusMinutes(5)))>0)
-                .map(c->c.getLocker().getLockerId())
+                .filter(c -> !c.getClient().isAWoman())
+                .filter(c -> c.getEntry().compareTo(Timestamp.valueOf(LocalDateTime.now().minusMinutes(5))) > 0)
+                .map(c -> c.getLocker().getLockerId())
                 .toList();
     }
 
 
-    public List<Long> getOptimalIdManLocker(){
-        List<Long> availableLocker = new LinkedList<>();
+    public Long getOptimalIdManLocker() {
 
+        Long optimalIdLocker;
+        List<Long> availableLocker = getAvailableLockerManId();
         List<Long> finishLocker = getLockerManIdWhichAreGoHome();
         List<Long> justArrivedLocker = getLockerMenIdWhichJustArrived();
-List<Long> finishAndJustArrived = new LinkedList<>();
-List<Long> goodLocker = new LinkedList<>();
-availableLocker.addAll(getAvailableLockerManId());
-
-
+        List<Long> finishAndJustArrived = new LinkedList<>();
 finishAndJustArrived.addAll(finishLocker);
 finishAndJustArrived.addAll(justArrivedLocker);
-        Collections.sort(finishAndJustArrived);
-        Collections.sort(availableLocker);
-        for (int i = 0; i < availableLocker.size(); i++) {
-            for (int j = 0; j <finishAndJustArrived.size() ; j++) {
-                if (availableLocker.get(i) != (finishAndJustArrived.get(j) -1)){
-                    goodLocker.add(availableLocker.get(i));
-                    break;
-                }
-            }
 
+List<Long> getOptimalIdLockers =  getOptimalNumber(availableLocker, finishAndJustArrived);
+
+if (getOptimalIdLockers.isEmpty()){
+    optimalIdLocker = availableLocker.stream().findFirst().orElseThrow();
+}
+        optimalIdLocker = getOptimalIdLockers.stream().findFirst().orElseThrow();
+
+
+
+
+
+        return optimalIdLocker;
+    }
+
+    public List<Long> getOptimalNumber(List<Long> available, List<Long> busy) {
+        List<Long> goodLocker = new LinkedList<>();
+
+        for (int i = 0; i < available.size(); i++) {
+
+            if (busy.contains(available.get(i) - 1) || busy.contains(available.get(i) + 1)) {
+                continue;
+            } else goodLocker.add(available.get(i));
         }
 
         return goodLocker;
     }
-}
 
+//    public List<Long> getOptimalIdManLocker(){
+//        List<Long> availableLocker = new LinkedList<>();
+//
+//        List<Long> finishLocker = getLockerManIdWhichAreGoHome();
+//        List<Long> justArrivedLocker = getLockerMenIdWhichJustArrived();
+//        List<Long> finishAndJustArrived = new LinkedList<>();
+//        List<Long> goodLocker = new LinkedList<>();
+//        availableLocker.addAll(getAvailableLockerManId());
+//
+//
+//        finishAndJustArrived.addAll(finishLocker);
+//        finishAndJustArrived.addAll(justArrivedLocker);
+//        Collections.sort(finishAndJustArrived);
+//        Collections.sort(availableLocker);
+//        for (int i = 0; i < availableLocker.size(); i++) {
+//            for (int j = 0; j <finishAndJustArrived.size() ; j++) {
+//                if (availableLocker.get(i) != (finishAndJustArrived.get(j) -1)){
+//                    goodLocker.add(availableLocker.get(i));
+//                    break;
+//                }
+//            }
+//
+//        }
+//
+//        return goodLocker;
+//    }
+//
+
+
+}
 
 
 //
