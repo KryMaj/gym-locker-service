@@ -9,18 +9,18 @@ import com.gym.gym.repository.ClientLockerRepository;
 import com.gym.gym.repository.ClientRepository;
 import com.gym.gym.repository.LockerRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
-@Log
 @Transactional
 @RequiredArgsConstructor
 public class ClientLockerService {
@@ -30,6 +30,10 @@ public class ClientLockerService {
     private final LockerRepository lockerRepository;
 
     private final ClientLockerMapper clientLockerMapper;
+
+    private final List<Long> a = new ArrayList<>();
+    private final List<Long> b = new ArrayList<>();
+
 
     public List<ClientLockerDto> getACLDto() {
         return clientLockerRepository.findAll()
@@ -46,9 +50,9 @@ public class ClientLockerService {
         boolean sex = clientToSave.isAWoman();
 
         if (sex) {
-            lockerToSave = getAvailableWomanLockers().stream().findFirst().orElseThrow();
+            lockerToSave = lockerRepository.findLockerByLockerId(getOptimalIdLocker(true));
         } else {
-            lockerToSave = getAvailableManLockers().stream().findFirst().orElseThrow();
+            lockerToSave = lockerRepository.findLockerByLockerId(getOptimalIdLocker(false));
         }
         lockerToSave.setAvailable(false);
         lockerRepository.save(lockerToSave);
@@ -88,16 +92,9 @@ public class ClientLockerService {
     }
 
 
-    private List<Locker> getAvailableManLockers() {
+    private List<Locker> getAvailableLockers(boolean isAWoman) {
         return lockerRepository.findAll().stream()
-                .filter(l -> !l.isAWomenLocker())
-                .filter(Locker::isAvailable)
-                .collect(Collectors.toList());
-    }
-
-    private List<Locker> getAvailableWomanLockers() {
-        return lockerRepository.findAll().stream()
-                .filter(Locker::isAWomenLocker)
+                .filter(l -> l.isAWomenLocker() == isAWoman)
                 .filter(Locker::isAvailable)
                 .collect(Collectors.toList());
     }
@@ -125,39 +122,13 @@ public class ClientLockerService {
         return clientLockers.size() > 0;
     }
 
-    public List<ClientLockerDto> getAllManClientLocker() {
-        return toListDto(getAllManClientLockers());
-    }
 
-    private List<ClientLocker> getAllManClientLockers() {
+    public List<ClientLocker> getAllClientLockers(boolean isAWoman) {
         return clientLockerRepository.findAll().stream()
-                .filter(l -> l.getLocker().isAWomenLocker() == false)
+                .filter(l -> l.getLocker().isAWomenLocker() == isAWoman)
                 .collect(Collectors.toList());
     }
 
-    public List<ClientLockerDto> getAllWomanClientLocker() {
-        return toListDto(getAllWomanClientLockers());
-    }
-
-    public List<ClientLocker> getAllWomanClientLockers() {
-        return clientLockerRepository.findAll().stream()
-                .filter(l -> l.getLocker().isAWomenLocker())
-                .collect(Collectors.toList());
-    }
-
-    private List<ClientLockerDto> toListDto(List<ClientLocker> list) {
-        return list.stream()
-                .map(clientLockerMapper::toDto)
-                .collect(Collectors.toList());
-    }
-
-    public List<ClientLockerDto> checkClientIsNotAboutFinishDtoMan() {
-        return toListDto(checkClientIsNotAboutFinish(getAllManClientLockers()));
-    }
-
-    public List<ClientLockerDto> checkClientIsNotAboutFinishDtoWoman() {
-        return toListDto(checkClientIsNotAboutFinish(getAllWomanClientLockers()));
-    }
 
     private List<ClientLocker> checkClientIsNotAboutFinish(List<ClientLocker> clientLockers) {
 
@@ -171,17 +142,8 @@ public class ClientLockerService {
     private boolean checkApproximateExitTime(Timestamp entry, int averageTime) {
         long time = entry.getTime();
 
-        Timestamp approximateTime2 = new Timestamp(time);
         time += averageTime;
         Timestamp approximateTime = new Timestamp(time);
-
-        log.info("approximateTime2: " + approximateTime2.toString());
-        log.info("approximateTime: " + approximateTime.toString());
-        Integer int1 = approximateTime.compareTo(Timestamp.valueOf(LocalDateTime.now().minusMinutes(5)));
-        Integer int2 = approximateTime.compareTo(Timestamp.valueOf(LocalDateTime.now().plusMinutes(5)));
-
-        log.info(int1.toString());
-        log.info(int2.toString());
 
 
         if (approximateTime.compareTo(Timestamp.valueOf(LocalDateTime.now().minusMinutes(5))) > 0 &&
@@ -193,94 +155,56 @@ public class ClientLockerService {
     }
 
 
-
-    public List<Long> getLockerManIdWhichAreGoHome(){
-
-     return  checkClientIsNotAboutFinish(getAllManClientLockers()).stream()
-                .map(l->l.getLocker().getLockerId())
-                .toList();
-    }
-
-    public List<Long> getAvailableLockerManId(){
-        return getAvailableManLockers().stream()
+    private List<Long> getAvailableLockerId(boolean isAWoman) {
+        return getAvailableLockers(isAWoman).stream()
                 .map(Locker::getLockerId)
                 .toList();
     }
 
-    public List<Long> getAvailableLockerWomanId(){
-        return getAvailableWomanLockers().stream()
-                .map(Locker::getLockerId)
+    private List<Long> getLockerIdWhichAreGoHome(boolean isAWoman) {
+
+        return checkClientIsNotAboutFinish(getAllClientLockers(isAWoman)).stream()
+                .map(l -> l.getLocker().getLockerId())
                 .toList();
     }
 
 
-    public List<Long> getLockerWomenIdWhichAreGoHome(){
-
-        return  checkClientIsNotAboutFinish(getAllWomanClientLockers()).stream()
-                .map(l->l.getLocker().getLockerId())
-                .toList();
-    }
-
-    public List<Long> getLockerWomenIdWhichJustArrived(){
+    private List<Long> getLockerIdWhichJustArrived(boolean isAWoman) {
         return clientLockerRepository.findAllByGoHomeIsNull().stream()
-                .filter(c->c.getClient().isAWoman())
-                .filter(c->c.getEntry().compareTo(Timestamp.valueOf(LocalDateTime.now().minusMinutes(5)))>0)
-                .map(c->c.getLocker().getLockerId())
+                .filter(c -> c.getClient().isAWoman() == isAWoman)
+                .filter(c -> c.getEntry().compareTo(Timestamp.valueOf(LocalDateTime.now().minusMinutes(5))) > 0)
+                .map(c -> c.getLocker().getLockerId())
                 .toList();
     }
 
-    public List<Long> getLockerMenIdWhichJustArrived(){
-        return clientLockerRepository.findAllByGoHomeIsNull().stream()
-                .filter(c->!c.getClient().isAWoman())
-                .filter(c->c.getEntry().compareTo(Timestamp.valueOf(LocalDateTime.now().minusMinutes(5)))>0)
-                .map(c->c.getLocker().getLockerId())
-                .toList();
+    private Long getOptimalIdLocker(boolean isAWoman) {
+        Long optimalIdLocker;
+        List<Long> finishAndJustArrived = new LinkedList<>();
+        finishAndJustArrived.addAll(getLockerIdWhichAreGoHome(isAWoman));
+        finishAndJustArrived.addAll(getLockerIdWhichJustArrived(isAWoman));
+        List<Long> getOptimalIdLockers = getOptimalNumber(getAvailableLockerId(isAWoman), finishAndJustArrived);
+
+        if (getOptimalIdLockers.isEmpty()) {
+            optimalIdLocker = getAvailableLockerId(isAWoman).stream().findFirst().orElseThrow();
+        } else {
+            optimalIdLocker = getOptimalIdLockers.stream().findFirst().orElseThrow();
+        }
+
+        return optimalIdLocker;
     }
+
+
+    private List<Long> getOptimalNumber(List<Long> available, List<Long> busy) {
+        List<Long> goodLocker = new LinkedList<>();
+
+        for (int i = 0; i < available.size(); i++) {
+            if (busy.contains(available.get(i) - 1) || busy.contains(available.get(i) + 1)) {
+                continue;
+            } else goodLocker.add(available.get(i));
+        }
+
+        return goodLocker;
+    }
+
 }
 
-
-
-//
-//    private List<Long> checkClientIsNotAboutFinishLockerId(boolean isAWoman) {
-//        if (isAWoman) {
-//            return checkClientIsNotAboutFinish(getAllWomanClientLocker()).stream()
-//                    .map(c -> c.getLocker().getLockerId())
-//                    .toList();
-//
-//        }
-//        return checkClientIsNotAboutFinish(getAllManClientLocker()).stream()
-//                .map(c -> c.getLocker().getLockerId())
-//                .toList();
-//    }
-
-//    private List<Long> getAvailableLocker(boolean isAWoman){
-//        if (isAWoman){
-//            return lockerRepository.findAll().stream()
-//                    .filter(Locker::isAWomenLocker)
-//                    .map(Locker::getLockerId)
-//                    .toList();
-//        }
-//
-//        return lockerRepository.findAll().stream()
-//                .filter(locker -> !locker.isAWomenLocker())
-//                .map(Locker::getLockerId)
-//                .toList();
-//    }
-
-
-//    private Locker getOptimalLocker(boolean isAWoman){
-//List<Long> availableLocker = getAvailableLocker(isAWoman);
-//List<Long> clientIsNotAboutFinishLockerId = checkClientIsNotAboutFinishLockerId(isAWoman);
-//        for (int i = 0; i <availableLocker.size() ; i++) {
-//            for (int j = 0; j <clientIsNotAboutFinishLockerId.size() ; j++) {
-//                availableLocker.get(i)>clientIsNotAboutFinishLockerId.get()
-//            }
-//        }
-//
-//    }
-
-//private boolean lockerSuitable(boolean isAWoman, Long lockerId){
-//    Stream<Long> longStream = checkClientIsNotAboutFinishLockerId(isAWoman).stream()
-//            .filter(l -> l > lockerId);
-//
-//}

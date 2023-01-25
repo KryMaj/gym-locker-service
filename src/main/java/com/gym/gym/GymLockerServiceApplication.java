@@ -1,7 +1,6 @@
 package com.gym.gym;
 
 import com.gym.gym.dto.ClientDto;
-import com.gym.gym.dto.ClientLockerDto;
 import com.gym.gym.dto.LockerDto;
 import com.gym.gym.mapper.ClientLockerMapper;
 import com.gym.gym.mapper.ClientMapper;
@@ -9,14 +8,12 @@ import com.gym.gym.mapper.LockerMapper;
 import com.gym.gym.repository.ClientLockerRepository;
 import com.gym.gym.repository.ClientRepository;
 import com.gym.gym.repository.LockerRepository;
+import com.gym.gym.service.ClientLockerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 @SpringBootApplication
 public class GymLockerServiceApplication {
@@ -32,6 +29,9 @@ public class GymLockerServiceApplication {
     @Autowired
     private ClientLockerMapper clientLockerMapper;
 
+    @Autowired
+    private ClientLockerService clientLockerService;
+
     public static void main(String[] args) {
         SpringApplication.run(GymLockerServiceApplication.class, args);
     }
@@ -42,45 +42,41 @@ public class GymLockerServiceApplication {
         return (args) -> {
 
 
-            ClientDto client1 = new ClientDto(5, "jana", "janek", true, 10);
-            ClientDto client2 = new ClientDto(6, "jan1", "janek", true, 10);
-            ClientDto client3 = new ClientDto(7, "jan2a", "janek", false, 10);
-            ClientDto client4 = new ClientDto(8, "jan3", "janek", false, 100000);
+            ClientDto client1 = new ClientDto(1, "edward", "klimek", false, 0);
+            ClientDto client2 = new ClientDto(2, "mariusz", "szubert", false, 0);
+            ClientDto client3 = new ClientDto(3, "karol", "wojtyla", false, 0);
+            ClientDto client4 = new ClientDto(4, "jan", "pawel", false, 0);
+            ClientDto client5 = new ClientDto(5, "patryk", "janek", false, 0);
+            ClientDto client6 = new ClientDto(6, "ewa", "szulc", true, 0);
+            ClientDto client7 = new ClientDto(7, "ada", "gajos", true, 0);
+            ClientDto client8 = new ClientDto(8, "karolina", "siekiewicz", true, 0);
+            ClientDto client9 = new ClientDto(9, "natalia", "tuwim", true, 0);
+            ClientDto client10 = new ClientDto(10, "sylwia", "kot", true, 0);
             clientRepository.save(ClientMapper.toEntity(client1));
             clientRepository.save(ClientMapper.toEntity(client2));
             clientRepository.save(ClientMapper.toEntity(client3));
             clientRepository.save(ClientMapper.toEntity(client4));
+            clientRepository.save(ClientMapper.toEntity(client5));
+            clientRepository.save(ClientMapper.toEntity(client6));
+            clientRepository.save(ClientMapper.toEntity(client7));
+            clientRepository.save(ClientMapper.toEntity(client8));
+            clientRepository.save(ClientMapper.toEntity(client9));
+            clientRepository.save(ClientMapper.toEntity(client10));
+
+            for (int i = 1; i < 11; i++) {
+                lockerRepository.save(LockerMapper.toEntity((new LockerDto(i, false, true))));
+            }
+
+            for (int i = 1; i < 11; i++) {
+                lockerRepository.save(LockerMapper.toEntity((new LockerDto(10+i, true, true))));
+            }
 
 
-            LockerDto locker1 = new LockerDto(1, true, true);
-            LockerDto locker2 = new LockerDto(2, true, true);
-            LockerDto locker3 = new LockerDto(3, false, true);
-            LockerDto locker4 = new LockerDto(4, false, true);
-
-            lockerRepository.save(LockerMapper.toEntity(locker1));
-            lockerRepository.save(LockerMapper.toEntity(locker2));
-            lockerRepository.save(LockerMapper.toEntity(locker3));
-            lockerRepository.save(LockerMapper.toEntity(locker4));
-
-            ClientLockerDto clientLockerDto1 = new ClientLockerDto(1L, 1l, 1L, Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf(LocalDateTime.now().plusHours(1l)));
-            ClientLockerDto clientLockerDto2 = new ClientLockerDto(2L, 2l, 2l, Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf(LocalDateTime.now().plusHours(2l)));
-            ClientLockerDto clientLockerDto3 = new ClientLockerDto(3L, 3l, 3l, Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf(LocalDateTime.now().plusHours(3l)));
-            ClientLockerDto clientLockerDto4 = new ClientLockerDto(4L, 1l, 2l, Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf(LocalDateTime.now().plusHours(1l)));
-            ClientLockerDto clientLockerDto5 = new ClientLockerDto(5L, 1l, 2l, Timestamp.valueOf(LocalDateTime.now()));
-            ClientLockerDto clientLockerDto6 = new ClientLockerDto(6L, 2l, 1l, Timestamp.valueOf(LocalDateTime.now()));
-            ClientLockerDto clientLockerDto7 = new ClientLockerDto(7L, 3l, 3l, Timestamp.valueOf(LocalDateTime.now()));
-            ClientLockerDto clientLockerDto8 = new ClientLockerDto(8L, 4l, 4l, Timestamp.valueOf(LocalDateTime.now().minusMinutes(4)));
-
+            clientLockerService.save(1l);
+            clientLockerService.save(2l);
+            clientLockerService.save(3l);
+            clientLockerService.save(4l);
 //
-            clientLockerRepository.save(clientLockerMapper.toEntity(clientLockerDto1));
-            clientLockerRepository.save(clientLockerMapper.toEntity(clientLockerDto2));
-            clientLockerRepository.save(clientLockerMapper.toEntity(clientLockerDto3));
-            clientLockerRepository.save(clientLockerMapper.toEntity(clientLockerDto4));
-            clientLockerRepository.save(clientLockerMapper.toEntity(clientLockerDto5));
-            clientLockerRepository.save(clientLockerMapper.toEntity(clientLockerDto6));
-            clientLockerRepository.save(clientLockerMapper.toEntity(clientLockerDto7));
-            clientLockerRepository.save(clientLockerMapper.toEntity(clientLockerDto8));
-
 
         };
     }
