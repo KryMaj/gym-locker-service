@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface LockerRepository extends JpaRepository<Locker, Long> {
 
     Locker findLockerByLockerId(Long lockerId);
+
 }

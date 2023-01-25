@@ -23,6 +23,5 @@ public class Client {
     private boolean isAWoman;
     private int averageTime;
     @OneToMany(mappedBy = "client")
-//    @JoinColumn(name = "client_id")
     private List<ClientLocker> clientLockers;
 }

@@ -31,11 +31,6 @@ public class ClientController {
         clientService.delete(id);
     }
 
-    @DeleteMapping()
-    public void deleteClient2(@RequestParam Long id) {
-        clientService.delete(id);
-    }
 }
 
 
-//poprawic dodawanie szafki, poprawci metode
