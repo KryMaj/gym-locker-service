@@ -4,6 +4,8 @@ import com.gym.gym.dto.ClientLockerDto;
 import com.gym.gym.entity.Client;
 import com.gym.gym.entity.ClientLocker;
 import com.gym.gym.entity.Locker;
+import com.gym.gym.exception.exceptions.EntityNotFoundException;
+import com.gym.gym.exception.messages.ExceptionMessages;
 import com.gym.gym.mapper.ClientLockerMapper;
 import com.gym.gym.repository.ClientLockerRepository;
 import com.gym.gym.repository.ClientRepository;
@@ -31,8 +33,6 @@ public class ClientLockerService {
 
     private final ClientLockerMapper clientLockerMapper;
 
-    private final List<Long> a = new ArrayList<>();
-    private final List<Long> b = new ArrayList<>();
 
 
     public List<ClientLockerDto> getACLDto() {
@@ -75,7 +75,8 @@ public class ClientLockerService {
         ClientLocker clientLocker = clientLockerRepository.findAllByGoHomeIsNull()
                 .stream()
                 .filter(c -> c.getClient().getUserId().equals(user))
-                .findFirst().orElseThrow();
+                .findFirst()
+                .orElseThrow(()-> new EntityNotFoundException(ExceptionMessages.ENTITY_NOT_FOUND.getMessage()));
 
         lockerToUpdate = clientLocker.getLocker();
         lockerToUpdate.setAvailable(true);
@@ -101,14 +102,16 @@ public class ClientLockerService {
 
     private int getAverageTime(Long userId) {
 
-        Long num;
         List<Long> list = clientLockerRepository.findAll()
                 .stream()
                 .filter(c -> Objects.equals(c.getClient().getUserId(), userId))
                 .map(c -> (c.getGoHome().toInstant().getEpochSecond() - c.getEntry().toInstant().getEpochSecond()))
                 .toList();
 
-        double average = list.stream().mapToLong(l -> l).average().orElseThrow();
+        double average = list.stream()
+                .mapToLong(l -> l)
+                .average()
+                .orElseThrow(()-> new EntityNotFoundException(ExceptionMessages.AVERAGE_TIME_IS_UNAVAILABLE.getMessage()));
         return (int) average;
     }
 
