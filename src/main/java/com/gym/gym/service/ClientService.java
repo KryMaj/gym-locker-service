@@ -2,6 +2,7 @@ package com.gym.gym.service;
 
 import com.gym.gym.dto.ClientDto;
 import com.gym.gym.entity.Client;
+import com.gym.gym.exception.exceptions.EntityNotFoundException;
 import com.gym.gym.mapper.ClientMapper;
 import com.gym.gym.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,10 @@ public class ClientService {
     }
 
     public ClientDto update(ClientDto clientUpdate) {
-        if (checkClientByUserId(clientUpdate.getUserId())) {
+
+        if (clientRepository.findById(clientUpdate.getUserId()).isEmpty()) {
+            throw new EntityNotFoundException("Client", clientUpdate.getUserId());
+        } else {
 
             Client clientByUserId = clientRepository.findClientByUserId(clientUpdate.getUserId());
             clientByUserId.setName(clientUpdate.getName());
@@ -41,10 +45,12 @@ public class ClientService {
             clientRepository.save(clientByUserId);
             return clientUpdate;
         }
-        return null;
     }
 
     public void delete(Long id) {
+        if (clientRepository.findById(id).isEmpty()){
+            throw new EntityNotFoundException("Client", id);
+        }
         clientRepository.deleteById(id);
     }
 
