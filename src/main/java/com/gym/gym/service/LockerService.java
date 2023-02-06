@@ -6,17 +6,19 @@ import com.gym.gym.exception.messages.ExceptionMessages;
 import com.gym.gym.mapper.LockerMapper;
 import com.gym.gym.repository.LockerRepository;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor
-@Transactional
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class LockerService {
-    private LockerRepository lockerRepository;
+    private final LockerRepository lockerRepository;
+
 
     public List<LockerDto> getAllLockers() {
         return lockerRepository.findAll()
