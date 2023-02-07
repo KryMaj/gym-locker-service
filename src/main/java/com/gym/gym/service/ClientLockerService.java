@@ -11,6 +11,8 @@ import com.gym.gym.repository.ClientLockerRepository;
 import com.gym.gym.repository.ClientRepository;
 import com.gym.gym.repository.LockerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -31,14 +33,19 @@ public class ClientLockerService {
     private final ClientRepository clientRepository;
     private final LockerRepository lockerRepository;
 
-    private final ClientLockerMapper clientLockerMapper;
+//    private final ClientLockerMapper clientLockerMapper;
 
 
+//    @Bean
+//    private ClientLockerMapper mapper(){
+//        return new ClientLockerMapper(clientRepository, lockerRepository);
+//    }
 
     public List<ClientLockerDto> getACLDto() {
         return clientLockerRepository.findAll()
                 .stream()
-                .map(clientLockerMapper::toDto)
+                .map(c->ClientLockerMapper.toDto(c))
+//                .map(clientLockerMapper::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -67,7 +74,7 @@ public class ClientLockerService {
                 .client(clientToSave)
                 .entry(Timestamp.valueOf(LocalDateTime.now()))
                 .build();
-        return clientLockerMapper.toDto((clientLockerRepository.save(clientLocker)));
+        return ClientLockerMapper.toDto((clientLockerRepository.save(clientLocker)));
     }
 
     public ClientLockerDto goHome(Long user) {
@@ -87,7 +94,7 @@ public class ClientLockerService {
         client.setAverageTime(getAverageTime(user));
         clientRepository.save(client);
         clientLocker.setGoHome(Timestamp.valueOf(LocalDateTime.now()));
-        return clientLockerMapper.toDto((clientLockerRepository.save(clientLocker)));
+        return ClientLockerMapper.toDto((clientLockerRepository.save(clientLocker)));
 
 
     }

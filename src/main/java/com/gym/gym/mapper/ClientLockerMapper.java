@@ -7,16 +7,24 @@ import com.gym.gym.entity.Locker;
 import com.gym.gym.repository.ClientRepository;
 import com.gym.gym.repository.LockerRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
-@AllArgsConstructor
-@Component
-public class ClientLockerMapper {
 
-    private final ClientRepository clientRepository;
-    private final LockerRepository lockerRepository;
+//@Component
+public interface ClientLockerMapper {
+//    final ClientRepository clientRepository;
+//    final LockerRepository lockerRepository;
+//
+//    public ClientLockerMapper(final ClientRepository clientRepository, final LockerRepository lockerRepository) {
+//        this.clientRepository = clientRepository;
+//        this.lockerRepository = lockerRepository;
+//    }
+//
 
-    public ClientLockerDto toDto(ClientLocker clientLocker) {
+
+    static ClientLockerDto toDto(ClientLocker clientLocker) {
         return ClientLockerDto.builder()
                 .entry(clientLocker.getEntry())
                 .idClient(clientLocker.getClient().getId())
@@ -26,20 +34,22 @@ public class ClientLockerMapper {
                 .build();
     }
 
-    public ClientLocker toEntity(ClientLockerDto clientLockerDto) {
+    static ClientLocker toEntity(ClientLockerDto clientLockerDto,
+                                 LockerRepository lockerRepository,
+                                 ClientRepository clientRepository) {
         return ClientLocker.builder()
-                .client(getClient(clientLockerDto.getIdClient()))
-                .locker(getLocker(clientLockerDto.getIdLocker()))
+                .client(clientRepository.findById(clientLockerDto.getIdClient()).orElseThrow())
+                .locker(lockerRepository.findById(clientLockerDto.getIdLocker()).orElseThrow())
                 .entry(clientLockerDto.getEntry())
                 .goHome(clientLockerDto.getGoHome())
                 .build();
     }
 
-    private Client getClient(Long id) {
-        return clientRepository.findById(id).orElseThrow();
-    }
-
-    private Locker getLocker(Long id) {
-        return lockerRepository.findById(id).orElseThrow();
-    }
+//    private Client getClient(Long id) {
+//        return clientRepository.findById(id).orElseThrow();
+//    }
+//
+//    private Locker getLocker(Long id) {
+//        return lockerRepository.findById(id).orElseThrow();
+//    }
 }

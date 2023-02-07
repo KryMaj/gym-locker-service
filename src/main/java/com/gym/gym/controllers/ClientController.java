@@ -25,6 +25,10 @@ public class ClientController {
         return clientService.save(clientDto);
     }
 
+    @PutMapping
+    public ClientDto update(@RequestBody ClientDto clientDto){
+        return clientService.update(clientDto);
+    }
 
     @DeleteMapping("/delete/{id}")
     public void deleteClient(@PathVariable Long id) {
