@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ExceptionMessages {
 
-    ENTITY_FOR_PROVIDED_ID_NOT_FOUND("Encja %s dla podanego id:%s nie istnieje"),
+    ENTITY_FOR_PROVIDED_ID_NOT_FOUND("Encja %s dla podanego id:%s nie istnieje!!!"),
     USER_FOR_PROVIDED_USERNAME_NOT_FOUND("Uzytkownik %s nie istnieje"),
     AVERAGE_TIME_IS_UNAVAILABLE("Średni czas jest niedostępny"),
     ENTITY_NOT_FOUND("Encja nie istnieje");

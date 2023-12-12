@@ -7,6 +7,6 @@
 /dataSources/
 /dataSources.local.xml
 
-/application.properties
+/application-prod.properties
 
 

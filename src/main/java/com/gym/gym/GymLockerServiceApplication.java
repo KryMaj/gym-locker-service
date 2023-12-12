@@ -11,25 +11,27 @@ import com.gym.gym.repository.LockerRepository;
 import com.gym.gym.service.ClientLockerService;
 import com.gym.gym.service.ClientService;
 import com.gym.gym.service.LockerService;
+import org.hibernate.engine.spi.IdentifierValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 
 @SpringBootApplication
 public class GymLockerServiceApplication {
 
 
-//
-//    @Autowired
-//private LockerService lockerService;
-//
-//    @Autowired
-//private ClientService clientService;
-//    @Autowired
-//
-//    private ClientLockerService clientLockerService;
+
+    @Autowired
+private LockerService lockerService;
+
+    @Autowired
+private ClientService clientService;
+    @Autowired
+
+    private ClientLockerService clientLockerService;
 
 
 
@@ -37,49 +39,42 @@ public class GymLockerServiceApplication {
         SpringApplication.run(GymLockerServiceApplication.class, args);
     }
 
+@Profile("dev")
+    @Bean
+    public CommandLineRunner demo() {
+        return (args) -> {
 
-//    @Bean
-//    public CommandLineRunner demo() {
-//        return (args) -> {
+
+            ClientDto client1 = new ClientDto(1, "edward", "klimek", false, 0);
+            ClientDto client2 = new ClientDto(2, "mariusz", "szubert", false, 0);
+            clientService.save(client1);
+            clientService.save(client2);
+
+
+            clientService.save("edward", "klimek", false);
+            clientService.save("edward", "klimek", false);
+            clientService.save("edward", "klimek", false);
+            clientService.save("edward", "klimek", false);
+
+            for (int i = 1; i < 11; i++) {
 //
+                lockerService.save((new LockerDto(i, false, true)));
+            }
+
+            for (int i = 1; i < 11; i++) {
 //
-//            ClientDto client1 = new ClientDto(1, "edward", "klimek", false, 0);
-//            ClientDto client2 = new ClientDto(2, "mariusz", "szubert", false, 0);
-//            ClientDto client3 = new ClientDto(3, "karol", "wojtyla", false, 0);
-//            ClientDto client4 = new ClientDto(4, "jan", "pawel", false, 0);
-//            ClientDto client5 = new ClientDto(5, "patryk", "janek", false, 0);
-//            ClientDto client6 = new ClientDto(6, "ewa", "szulc", true, 0);
-//            ClientDto client7 = new ClientDto(7, "ada", "gajos", true, 0);
-//            ClientDto client8 = new ClientDto(8, "karolina", "siekiewicz", true, 0);
-//            ClientDto client9 = new ClientDto(9, "natalia", "tuwim", true, 0);
-//            ClientDto client10 = new ClientDto(10, "sylwia", "kot", true, 0);
-//            clientService.save(client1);
-//            clientService.save(client2);
-//            clientService.save(client3);
-//            clientService.save(client4);
-//            clientService.save(client5);
-//            clientService.save(client6);
-//
-//
-//            for (int i = 1; i < 11; i++) {
-////
-//                lockerService.save((new LockerDto(i, false, true)));
-//            }
-//
-//            for (int i = 1; i < 11; i++) {
-////
-//                lockerService.save((new LockerDto(i+10, true, true)));
-//            }
-//
+                lockerService.save((new LockerDto(i+10, true, true)));
+            }
+
 //
 //            clientLockerService.save(1l);
 //            clientLockerService.save(2l);
 //            clientLockerService.save(3l);
 //            clientLockerService.save(4l);
-////
-//
-//        };
-//    }
+
+
+        };
+    }
 
 
 }
