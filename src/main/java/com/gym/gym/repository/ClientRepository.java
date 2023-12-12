@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface ClientRepository extends JpaRepository<Client, Long> {
 
 Client findClientByUserId(Long userId);
+
+void deleteByUserId(Long userID);
 }

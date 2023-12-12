@@ -20,7 +20,7 @@ public interface ClientMapper{
         return Client.builder()
                 .name(clientDto.getName())
                 .surname(clientDto.getSurname())
-                .isAWoman(clientDto.isAWoman())
+                .isAWoman(clientDto.getIsAWoman())
                 .averageTime(clientDto.getAverageTime())
                 .userId(clientDto.getUserId())
                 .build();

@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -45,7 +46,6 @@ public class ClientLockerService {
         return clientLockerRepository.findAll()
                 .stream()
                 .map(c->ClientLockerMapper.toDto(c))
-//                .map(clientLockerMapper::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -216,5 +216,22 @@ public class ClientLockerService {
         return goodLocker;
     }
 
+    public boolean existsById(Long idClient) {
+        Client clientByUserId = clientRepository.findClientByUserId(idClient);
+
+        if (clientByUserId == null){
+            return false;
+        }
+        return true;
+
+    }
+
+    public boolean stillTraining(Long idClient){
+
+        return getACLDto().stream()
+                .filter(c -> c.getGoHome()==null)
+                .anyMatch(c->c.getIdClient().equals(idClient));
+
+    }
 }
 

@@ -1,8 +1,10 @@
 package com.gym.gym.controllers;
 
 import com.gym.gym.dto.ClientDto;
+import com.gym.gym.entity.Client;
 import com.gym.gym.service.ClientService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +22,14 @@ public class ClientController {
         return clientService.getAllClients();
     }
 
+
+    @GetMapping("/x")
+    public List<Client> getAllClient() {
+        return clientService.getAllClient();
+    }
+
+
+
     @PostMapping
     public ClientDto save(@RequestBody ClientDto clientDto) {
         return clientService.save(clientDto);
@@ -34,6 +44,9 @@ public class ClientController {
     public void deleteClient(@PathVariable Long id) {
         clientService.delete(id);
     }
+
+
+
 
 }
 

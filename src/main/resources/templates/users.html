@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Gym locker- admin</title>
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+
+
+
+    <!-- Custom styles for this template -->
+    <link href="css/scrolling-nav.css" rel="stylesheet">
+</head>
+<body>
+
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+    <div class="container">
+        <a class="navbar-brand js-scroll-trigger" href="home">Back to main website</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="/logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<header class="bg-primary text-white">
+    <div class="container text-center">
+        <h1>Users</h1>
+
+    <a class="btn btn-dark" th:href="save">Save new user</a>
+    <a class="btn btn-dark" th:href="update">Update user</a>
+    <a class="btn btn-dark" th:href="lockers">Show lockers</a>
+    <a class="btn btn-dark" th:href="clients">Register event</a>
+    </div>
+</header>
+
+<label for="userFilter">Filtruj użytkowników:</label>
+<select id="userFilter" onchange="setValue(this.value)">
+    <option value="All" selected>Wszyscy</option>
+    <option value="false">Mężczyźni</option>
+    <option value="true">Kobiety</option>
+</select>
+<input type="text" id="searchInput" placeholder="Szukaj..." onkeyup="searchTable()">
+
+
+<table id="clientTable">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Surname</th>
+        <th>Sex</th>
+        <th>Average Time</th>
+        <th>Edycja</th>
+        <th>Usuń</th>
+
+    </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+</table>
+
+<section>
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                    <form method="post" th:action="@{/users}" th:object="${clientDto}">
+                    <div class="form-group">
+                        <label for="nameInput">Name:</label>
+                        <input class="form-control" id="nameInput" name="name1" type="text" th:field="*{name}" required/>
+                    </div>
+                    <div class="form-group">
+                        <label for="surnameInput">Surname:</label>
+                        <input class="form-control" id="surnameInput" name="surname" type="text" th:field="*{surname}" required/>
+                    </div>
+                    <div class="form-group">
+                        <input  class="form-control" id="userIdInput" name="userId"  type="hidden"  value="" th:field="*{userId}" required/>
+                    </div>
+                    <div class="form-group">
+                        <label for="isAWoman">Gender:</label>
+                        <select class="form-control" name="isAWoman" id="isAWoman">
+                            <option value="true">Woman</option>
+                            <option value="false">Man</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+
+
+
+<section>
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteUserModalLabel">Delete User</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="deleteForm" method="post" th:action="@{/users}" >
+                        <div class="form-group">
+                            <label for="userIdInput2">Usunąć użytkownika?</label>
+                            <input class="form-control" id="userIdInput2" type="hidden" name="userId" value="" required/>
+                        </div>
+                        <div id="userInfoToDelete">
+                            <p>Imię: <span id="userNameToDelete"></span></p>
+                            <p>Nazwisko: <span id="userSurnameToDelete"></span></p>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Delete</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<footer>
+    <div class="container">
+        <p class="m-0 text-center text-white">Copyright &copy; Gym Locker <span th:text="${#dates.year(#dates.createNow())}"></span></p>
+    </div>
+</footer>
+
+</body>
+<script>
+
+let usersData;
+
+
+
+function getClientById(userId) {
+      if (usersData) {
+        return usersData.find(client => client.userId == userId);
+    } else {
+        return null; // lub inna wartość domyślna, jeśli usersData nie jest dostępne
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+showUsers();
+
+
+document.getElementById('userFilter').addEventListener('change', function () {
+    setValue(this.value);
+});
+
+
+
+function openDeleteModal(userId) {
+  const user = getClientById(userId);
+
+  if (user) {
+    document.getElementById('userIdInput2').value = userId;
+    document.getElementById('userNameToDelete').textContent = user.name;
+    document.getElementById('userSurnameToDelete').textContent = user.surname;
+    $('#deleteModal').modal('show');
+  } else {
+    // Dodaj obsługę, jeśli klient nie istnieje
+    alert('Klient o podanym ID nie istnieje');
+  }
+}
+
+function removeUserFromTable(userId) {
+ const table = document.getElementById("clientTable");
+  const tbody = table.querySelector('tbody');
+  const rowToRemove = tbody.querySelector(`tr[data-user-id="${userId}"]`);
+  if (rowToRemove) {
+    tbody.removeChild(rowToRemove);
+  }
+}
+
+
+
+document.getElementById('deleteForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+    const userId = document.getElementById('userIdInput2').value;
+    deleteUser(userId);
+});
+
+
+
+
+document.getElementById('clientTable').addEventListener('click', function (event) {
+    if (event.target.getAttribute('data-action') === 'delete') {
+        const userId = event.target.getAttribute('data-user-id');
+
+        openDeleteModal(userId);
+    }
+});
+
+
+
+
+function deleteUser(userId) {
+
+
+    // Wysyłanie żądania DELETE do serwera
+    fetch(`/delete/${userId}`, {
+        method: 'DELETE',
+    })
+    .then(response => {
+        if (response.status === 200) {
+            $('#deleteModal').modal('hide');
+                 removeUserFromTable(userId);
+              location.reload();
+        }
+    })
+    .catch(error => console.error('Błąd:', error));
+}
+
+
+
+// Pobieranie danych użytkowników przy starcie strony lub w inny sposób
+fetch('http://localhost:8180/client')
+    .then(response => response.json())
+    .then(data => {
+        usersData = data; // Przypisanie danych do zmiennej usersData
+        console.log(usersData);
+        showUsers(); // Wywołanie funkcji showUsers po uzyskaniu danych
+    })
+    .catch(error => console.error('Błąd:', error));
+
+
+
+// Obsługa kliknięcia "Edycja" w tabeli
+document.getElementById('clientTable').addEventListener('click', function (event) {
+if (event.target.getAttribute('data-action') === 'edit') {
+const userId = event.target.getAttribute('data-user-id');
+editUser(userId);
+
+}
+});
+});
+
+
+
+let currentValue = "All";
+
+function setValue(value) {
+currentValue = value;
+showUsers();
+
+}
+
+
+
+
+
+
+function editUser(userId) {
+    const client = getClientById(userId);
+    if (client) {
+        document.getElementById('userIdInput').value = client.userId; // Ustaw ID użytkownika
+        document.getElementById('nameInput').value = client.name;
+        document.getElementById('surnameInput').value = client.surname;
+        document.getElementById('isAWoman').value = client.isAWoman;
+        $('#editModal').modal('show');
+    }
+     else {
+        // Wyświetl komunikat, że klient o podanym ID nie istnieje
+        alert('Klient o podanym ID nie istnieje');
+    }
+
+}
+
+
+
+
+
+function searchTable() {
+let input, filter, table, tr, td, i, txtValue;
+input = document.getElementById("searchInput");
+filter = input.value.toUpperCase();
+table = document.getElementById("clientTable");
+tr = table.getElementsByTagName("tr");
+
+for (i = 0; i < tr.length; i++) {
+td = tr[i].getElementsByTagName("td")[2];
+if (td) {
+txtValue = td.textContent || td.innerText;
+if (txtValue.toUpperCase().indexOf(filter) > -1) {
+tr[i].style.display = "";
+} else {
+tr[i].style.display = "none";
+}
+}
+}
+}
+
+
+function showUsers() {
+
+fetch('http://localhost:8180/client')
+.then(response => response.json())
+.then(data => {
+const clientTable = document.getElementById('clientTable');
+const tbody = clientTable.querySelector('tbody');
+
+tbody.innerHTML = '';
+
+data.forEach(client => {
+if (currentValue === "All" || (currentValue === "true" && client.isAWoman) || (currentValue === "false" && !client.isAWoman)) {
+ const gender = client.isAWoman ? 'Woman' : 'Man';
+const tr = document.createElement('tr');
+tr.innerHTML = `
+<td>${client.userId}</td>
+<td>${client.name}</td>
+<td>${client.surname}</td>
+<td>${gender}</td>
+<td>${client.averageTime}</td>
+<td><a href="#" data-action="edit" data-user-id="${client.userId}">Edycja</a></td>
+<td><a href="#" data-action="delete" data-user-id="${client.userId}">Usuń</a></td>
+`;
+tbody.appendChild(tr);
+}
+});
+})
+.catch(error => console.error('Błąd:', error));
+}
+
+
+
+
+</script>
+
+
+</html>

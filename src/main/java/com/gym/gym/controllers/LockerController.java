@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("locker")
+@RequestMapping("locker2")
 @RestController
 @RequiredArgsConstructor
 public class LockerController {

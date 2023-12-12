@@ -16,4 +16,11 @@ public class ClientDto {
     private boolean isAWoman;
     private int averageTime;
 
+    public boolean getIsAWoman() {
+        return isAWoman;
+    }
+
+    public void setIsAWoman(boolean AWoman) {
+        isAWoman = AWoman;
+    }
 }
