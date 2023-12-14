@@ -3,7 +3,7 @@ package com.gym.gym.entity;
 import lombok.*;
 
 import javax.persistence.*;
-
+@EqualsAndHashCode
 @Entity
 @Table
 @Setter

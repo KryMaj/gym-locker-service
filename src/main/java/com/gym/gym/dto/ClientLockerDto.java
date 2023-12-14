@@ -4,6 +4,7 @@ import lombok.*;
 
 import java.sql.Timestamp;
 
+@EqualsAndHashCode
 @Getter
 @Setter
 @NoArgsConstructor

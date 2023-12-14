@@ -2,7 +2,7 @@ package com.gym.gym.dto;
 
 import lombok.*;
 
-
+@EqualsAndHashCode
 @Getter
 @Setter
 @NoArgsConstructor
