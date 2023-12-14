@@ -12,16 +12,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 
-//@Component
+
 public interface ClientLockerMapper {
-//    final ClientRepository clientRepository;
-//    final LockerRepository lockerRepository;
-//
-//    public ClientLockerMapper(final ClientRepository clientRepository, final LockerRepository lockerRepository) {
-//        this.clientRepository = clientRepository;
-//        this.lockerRepository = lockerRepository;
-//    }
-//
 
 
     static ClientLockerDto toDto(ClientLocker clientLocker) {
@@ -30,7 +22,7 @@ public interface ClientLockerMapper {
                 .idClient(clientLocker.getClient().getId())
                 .idLocker(clientLocker.getLocker().getLockerId())
                 .goHome(clientLocker.getGoHome())
-                .clientLockerId(clientLocker.getId())
+                .clientLockerId(clientLocker.getClientLockerId())
                 .build();
     }
 
@@ -42,14 +34,9 @@ public interface ClientLockerMapper {
                 .locker(lockerRepository.findById(clientLockerDto.getIdLocker()).orElseThrow())
                 .entry(clientLockerDto.getEntry())
                 .goHome(clientLockerDto.getGoHome())
+                .clientLockerId(clientLockerDto.getClientLockerId())
                 .build();
     }
 
-//    private Client getClient(Long id) {
-//        return clientRepository.findById(id).orElseThrow();
-//    }
-//
-//    private Locker getLocker(Long id) {
-//        return lockerRepository.findById(id).orElseThrow();
-//    }
+
 }

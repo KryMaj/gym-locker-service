@@ -34,13 +34,7 @@ public class ClientLockerService {
     private final ClientRepository clientRepository;
     private final LockerRepository lockerRepository;
 
-//    private final ClientLockerMapper clientLockerMapper;
 
-
-//    @Bean
-//    private ClientLockerMapper mapper(){
-//        return new ClientLockerMapper(clientRepository, lockerRepository);
-//    }
 
     public List<ClientLockerDto> getACLDto() {
         return clientLockerRepository.findAll()
