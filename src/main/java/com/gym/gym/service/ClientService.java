@@ -38,6 +38,8 @@ public class ClientService {
 
 
     public ClientDto save(ClientDto clientDto) {
+
+
         return ClientMapper.toDto(clientRepository.save(ClientMapper.toEntity(clientDto)));
     }
 
@@ -49,26 +51,10 @@ public class ClientService {
         return ClientMapper.toDto(clientRepository.save(ClientMapper.toEntity(clientDto)));
     }
 
-//    public ClientDto update(ClientDto clientUpdate) {
-//
-//        if (clientRepository.findById(clientUpdate.getUserId()).isEmpty()) {
-//            throw new EntityNotFoundException("Client", clientUpdate.getUserId());
-//        } else {
-//
-//            Client clientByUserId = clientRepository.findClientByUserId(clientUpdate.getUserId());
-//            clientByUserId.setName(clientUpdate.getName());
-//            clientByUserId.setSurname(clientUpdate.getSurname());
-//            clientByUserId.setAWoman(clientUpdate.getIsAWoman());
-//
-//            clientRepository.save(clientByUserId);
-//            return clientUpdate;
-//        }
-//    }
+
     public ClientDto update(ClientDto clientUpdate) {
 
-//        if (!checkClientByUserId(clientUpdate.getUserId())) {
-//            throw new EntityNotFoundException("Client", clientUpdate.getUserId());
-//        } else {
+
 
             Client clientByUserId = clientRepository.findClientByUserId(clientUpdate.getUserId());
             clientByUserId.setName(clientUpdate.getName());

@@ -1,7 +1,9 @@
 package com.gym.gym.repository;
 
 import com.gym.gym.entity.Client;
+import com.gym.gym.service.ClientService;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -24,7 +26,6 @@ class ClientRepositoryTest {
         client.setAWoman(false);
         client.setAverageTime(30);
 
-//        ClientRepository clientRepository = mock(ClientRepository.class);
 
         when(clientRepository.findClientByUserId(1L)).thenReturn(client);
 
@@ -46,6 +47,8 @@ class ClientRepositoryTest {
 
         verify(clientRepository, times(1)).deleteByUserId(1L);
     }
+
+
 
 
 
