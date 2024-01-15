@@ -2,83 +2,69 @@ package com.gym.gym.service;
 
 
 import com.gym.gym.dto.LockerDto;
-import com.gym.gym.entity.Locker;
 import com.gym.gym.exception.exceptions.EntityNotFoundException;
 import com.gym.gym.mapper.LockerMapper;
 import com.gym.gym.repository.LockerRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
-import java.util.Collections;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
+
+@ActiveProfiles("test")
 class LockerServiceTest {
 
-    @Mock
-    private LockerRepository lockerRepository;
 
-    @InjectMocks
-    private LockerService lockerService;
-
-    @BeforeEach
-    void setUp() {
-
-        MockitoAnnotations.initMocks(this);
-    }
+    @Autowired
+    LockerRepository lockerRepository;
+    @Autowired
+    LockerService lockerService;
 
     @Test
-    void getAllLockers_shouldReturnListOfLockers() {
-        // Given
-        when(lockerRepository.findAll()).thenReturn(Collections.emptyList());
+    public void shouldReturnAllLockers() {
 
-        // When
-        var result = lockerService.getAllLockers();
+        List<LockerDto> lockers = lockerService.getAllLockers();
 
-        // Then
-        assertNotNull(result);
-        assertTrue(result.isEmpty());
+        assertEquals(20, lockers.size());
 
-        verify(lockerRepository).findAll();
-    }
-
-    @Test
-    void save_shouldReturnSavedLockerDto() {
-        // Given
-        LockerDto inputLockerDto = new LockerDto();
-        Locker savedEntity = LockerMapper.toEntity(inputLockerDto);
-        when(lockerRepository.save(any())).thenReturn(savedEntity);
-
-        // When
-        var result = lockerService.save(inputLockerDto);
-
-        // Then
-        assertNotNull(result);
-        assertEquals(inputLockerDto, LockerMapper.toDto(savedEntity));
-
-        // Optionally, you can verify that the repository method was called
-        verify(lockerRepository).save(any());
     }
 
 
     @Test
-    void delete_nonExistingLocker_shouldThrowEntityNotFoundException() {
-        // Given
-        Long nonExistingLockerId = 2L;
-        when(lockerRepository.findById(nonExistingLockerId)).thenReturn(Optional.empty());
+    public void shouldSaveLocker() {
 
-        // When and Then
-        assertThrows(EntityNotFoundException.class, () -> lockerService.delete(nonExistingLockerId));
+        //given
+        LockerDto lockerToSave = new LockerDto(21, false, false);
+        lockerService.save(lockerToSave);
+        //when
+        LockerDto lockerByLockerId = LockerMapper.toDto(lockerRepository.findLockerByLockerId(lockerToSave.getLockerId()));
 
-        // Optionally, you can verify that the repository method was not called
-        verifyNoInteractions(lockerRepository);
+        //then
+        assertEquals(lockerToSave, lockerByLockerId);
+    }
+
+
+    @Test
+    public void shouldThrowExceptionWhenDeleteLockerWhichNoExist() {
+        assertThrows(EntityNotFoundException.class, () -> lockerService.delete(1200l));
+    }
+
+
+    @Test
+    public void shouldDeleteLocker() {
+        //given
+        LockerDto lockerToDelete = new LockerDto(22, false, false);
+        lockerService.save(lockerToDelete);
+
+        lockerService.delete(lockerToDelete.getLockerId());
+
+        assertNull(lockerRepository.findLockerByLockerId(lockerToDelete.getLockerId()));
+
     }
 
 

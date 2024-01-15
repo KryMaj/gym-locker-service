@@ -2,10 +2,8 @@ package com.gym.gym.service;
 
 import com.gym.gym.dto.LockerDto;
 import com.gym.gym.exception.exceptions.EntityNotFoundException;
-import com.gym.gym.exception.messages.ExceptionMessages;
 import com.gym.gym.mapper.LockerMapper;
 import com.gym.gym.repository.LockerRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +15,8 @@ import java.util.stream.Collectors;
 @Transactional
 @RequiredArgsConstructor
 public class LockerService {
+
+
     private final LockerRepository lockerRepository;
 
 
@@ -33,7 +33,7 @@ public class LockerService {
 
     public void delete(Long id) {
 
-        if (lockerRepository.findById(id).isEmpty()){
+        if (lockerRepository.findById(id).isEmpty()) {
             throw new EntityNotFoundException("Locker", id);
         }
         lockerRepository.deleteById(id);

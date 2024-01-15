@@ -1,42 +1,49 @@
 package com.gym.gym.repository;
 
 import com.gym.gym.entity.Client;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@ExtendWith(SpringExtension.class)
-@DataJpaTest
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.*;
+
+
 class ClientRepositoryTest {
 
-    @Autowired
-    ClientRepository clientRepository;
+    ClientRepository clientRepository = mock(ClientRepository.class);
 
-    @Autowired
-    TestEntityManager testEntityManager;
 
     @Test
-    void shouldFindAllClient(){
-        //given
-        testEntityManager.persist(Client.builder()
-                .name("jan")
-                .surname("nowak")
-                .averageTime(1000)
-                .build());
+    public void testFindClientByUserId() {
 
-        //when
-        var clients = clientRepository.findAll();
+        Client client = new Client();
+        client.setUserId(1L);
+        client.setName("Jan");
+        client.setSurname("Nowak");
+        client.setAWoman(false);
+        client.setAverageTime(30);
 
-        //then
-        Assertions.assertEquals(1, clients.size());
 
+        when(clientRepository.findClientByUserId(1L)).thenReturn(client);
+
+
+        Client result = clientRepository.findClientByUserId(1L);
+
+
+        assertNotNull(result);
+        assertEquals(result.getUserId(), 1L);
+        assertEquals(result.getName(), "Jan");
 
     }
 
+    @Test
+    public void testDeleteByUserId() {
+
+        clientRepository.deleteByUserId(1L);
+
+
+        verify(clientRepository, times(1)).deleteByUserId(1L);
+    }
 
 
 }

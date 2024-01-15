@@ -1,17 +1,12 @@
 package com.gym.gym.controllers;
 
 import com.gym.gym.dto.ClientDto;
-import com.gym.gym.dto.LockerDto;
-import com.gym.gym.entity.Client;
 import com.gym.gym.service.ClientLockerService;
 import com.gym.gym.service.ClientService;
-import com.gym.gym.service.LockerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RequestMapping
 @RequiredArgsConstructor
@@ -49,7 +44,9 @@ public class ThymeleafController {
 
 
     @GetMapping("/lockers")
-    public String lockers(Model model) {return "lockers";}
+    public String lockers(Model model) {
+        return "lockers";
+    }
 
 
     @GetMapping("/users")
@@ -58,7 +55,6 @@ public class ThymeleafController {
         clientService.getAllClients();
         return "users";
     }
-
 
 
     @PostMapping("/users")
@@ -88,23 +84,22 @@ public class ThymeleafController {
     }
 
 
-
     @GetMapping("/save")
-    public String copy(   @ModelAttribute("clientDto") ClientDto clientDto,Model model){
+    public String copy(@ModelAttribute("clientDto") ClientDto clientDto, Model model) {
         return "save";
     }
 
-@PostMapping("/save")
-    public String save(@ModelAttribute("clientDto") ClientDto clientDto, Model model){
+    @PostMapping("/save")
+    public String save(@ModelAttribute("clientDto") ClientDto clientDto, Model model) {
 
-        clientService.save(clientDto.getName(),clientDto.getSurname(), clientDto.getIsAWoman());
-    return "redirect:/users";
+        clientService.save(clientDto.getName(), clientDto.getSurname(), clientDto.getIsAWoman());
+        return "redirect:/users";
     }
 
     @GetMapping("/clients")
-    public String clients(Model model) {return "clients";}
-
-
+    public String clients(Model model) {
+        return "clients";
+    }
 
 
     @PostMapping("/clients")
@@ -124,7 +119,7 @@ public class ThymeleafController {
     }
 
     @PostMapping("/goHome")
-    public String goHome(@RequestParam("idClient") Long idClient, Model model){
+    public String goHome(@RequestParam("idClient") Long idClient, Model model) {
         if (!clientLockerService.existsById(idClient)) {
             model.addAttribute("error3", "User with ID " + idClient + " does not exist.");
 
@@ -142,14 +137,13 @@ public class ThymeleafController {
     }
 
 
-
     @GetMapping("/update")
-    public String updateGet(   @ModelAttribute("clientDto") ClientDto clientDto,Model model){
+    public String updateGet(@ModelAttribute("clientDto") ClientDto clientDto, Model model) {
         return "update";
     }
 
     @PostMapping("/update")
-    public String updatePost(@ModelAttribute("clientDto") ClientDto clientDto, Model model){
+    public String updatePost(@ModelAttribute("clientDto") ClientDto clientDto, Model model) {
 
         if (!clientService.checkClientByUserId(clientDto.getUserId())) {
             model.addAttribute("error3", "User with ID " + clientDto.getUserId() + " does not exist.");
@@ -160,8 +154,6 @@ public class ThymeleafController {
         clientService.update(clientDto);
         return "users";
     }
-
-
 
 
 }

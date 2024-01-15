@@ -4,7 +4,9 @@ import com.gym.gym.entity.Client;
 import com.gym.gym.mapper.ClientMapper;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 
 class ClientDtoTest {
 

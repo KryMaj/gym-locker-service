@@ -6,18 +6,13 @@ import com.gym.gym.entity.Locker;
 import com.gym.gym.mapper.ClientLockerMapper;
 import com.gym.gym.repository.ClientRepository;
 import com.gym.gym.repository.LockerRepository;
-import org.assertj.core.api.Assert;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.Timestamp;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.as;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
