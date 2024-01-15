@@ -3,7 +3,7 @@ package com.gym.gym.mapper;
 import com.gym.gym.dto.ClientDto;
 import com.gym.gym.entity.Client;
 
-public interface ClientMapper{
+public interface ClientMapper {
 
 
     static ClientDto toDto(Client client) {

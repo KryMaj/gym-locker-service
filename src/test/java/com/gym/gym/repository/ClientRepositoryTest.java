@@ -1,9 +1,7 @@
 package com.gym.gym.repository;
 
 import com.gym.gym.entity.Client;
-import com.gym.gym.service.ClientService;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -11,7 +9,6 @@ import static org.mockito.Mockito.*;
 
 
 class ClientRepositoryTest {
-
 
     ClientRepository clientRepository = mock(ClientRepository.class);
 
@@ -47,10 +44,6 @@ class ClientRepositoryTest {
 
         verify(clientRepository, times(1)).deleteByUserId(1L);
     }
-
-
-
-
 
 
 }

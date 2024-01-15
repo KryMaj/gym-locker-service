@@ -3,14 +3,9 @@ package com.gym.gym.dto;
 import com.gym.gym.entity.Client;
 import com.gym.gym.mapper.ClientMapper;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.sql.Timestamp;
-
-import static org.junit.jupiter.api.Assertions.*;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 
 class ClientDtoTest {
@@ -52,9 +47,6 @@ class ClientDtoTest {
         Client mappedEntity = ClientMapper.toEntity(clientDto);
         assertEquals(clientEntity, mappedEntity);
     }
-
-
-
 
 
 }

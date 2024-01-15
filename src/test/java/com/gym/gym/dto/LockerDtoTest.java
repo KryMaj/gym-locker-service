@@ -4,12 +4,8 @@ import com.gym.gym.entity.Locker;
 import com.gym.gym.mapper.LockerMapper;
 import org.junit.jupiter.api.Test;
 
-import java.sql.Timestamp;
-
-import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
 
 class LockerDtoTest {
 

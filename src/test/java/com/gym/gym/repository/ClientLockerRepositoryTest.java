@@ -6,11 +6,9 @@ import org.junit.jupiter.api.Test;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class ClientLockerRepositoryTest {
 
@@ -18,13 +16,13 @@ class ClientLockerRepositoryTest {
 
 
     @Test
-    public void shouldFindAllByGoHomeIsNull(){
+    public void shouldFindAllByGoHomeIsNull() {
 
         List<ClientLocker> clientLockers = Collections.EMPTY_LIST;
 
         when(clientLockerRepository.findAllByGoHomeIsNull()).thenReturn(clientLockers);
 
-        List<ClientLocker> clientLockersFind  = clientLockerRepository.findAllByGoHomeIsNull();
+        List<ClientLocker> clientLockersFind = clientLockerRepository.findAllByGoHomeIsNull();
 
 
         assertEquals(clientLockers, clientLockersFind);

@@ -11,19 +11,15 @@ import com.gym.gym.repository.ClientLockerRepository;
 import com.gym.gym.repository.ClientRepository;
 import com.gym.gym.repository.LockerRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -35,23 +31,25 @@ public class ClientLockerService {
     private final LockerRepository lockerRepository;
 
 
-
     public List<ClientLockerDto> getACLDto() {
         return clientLockerRepository.findAll()
                 .stream()
-                .map(c->ClientLockerMapper.toDto(c))
+                .map(c -> ClientLockerMapper.toDto(c))
                 .collect(Collectors.toList());
     }
 
 
     public ClientLockerDto save(Long userId) {
+
         Client clientToSave = clientRepository.findClientByUserId(userId);
         Locker lockerToSave;
+
 
         boolean sex = clientToSave.isAWoman();
 
         if (sex) {
             lockerToSave = lockerRepository.findLockerByLockerId(getOptimalIdLocker(true));
+            System.out.println("1");
         } else {
             lockerToSave = lockerRepository.findLockerByLockerId(getOptimalIdLocker(false));
         }
@@ -68,8 +66,10 @@ public class ClientLockerService {
                 .client(clientToSave)
                 .entry(Timestamp.valueOf(LocalDateTime.now()))
                 .build();
+
         return ClientLockerMapper.toDto((clientLockerRepository.save(clientLocker)));
     }
+
 
     public ClientLockerDto goHome(Long user) {
         Locker lockerToUpdate;
@@ -77,7 +77,7 @@ public class ClientLockerService {
                 .stream()
                 .filter(c -> c.getClient().getUserId().equals(user))
                 .findFirst()
-                .orElseThrow(()-> new EntityNotFoundException(ExceptionMessages.ENTITY_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new EntityNotFoundException(ExceptionMessages.ENTITY_NOT_FOUND.getMessage()));
 
         lockerToUpdate = clientLocker.getLocker();
         lockerToUpdate.setAvailable(true);
@@ -112,7 +112,7 @@ public class ClientLockerService {
         double average = list.stream()
                 .mapToLong(l -> l)
                 .average()
-                .orElseThrow(()-> new EntityNotFoundException(ExceptionMessages.AVERAGE_TIME_IS_UNAVAILABLE.getMessage()));
+                .orElseThrow(() -> new EntityNotFoundException(ExceptionMessages.AVERAGE_TIME_IS_UNAVAILABLE.getMessage()));
         return (int) average;
     }
 
@@ -127,7 +127,7 @@ public class ClientLockerService {
     }
 
 
-    public List<ClientLocker> getAllClientLockers(boolean isAWoman) {
+    private List<ClientLocker> getAllClientLockers(boolean isAWoman) {
         return clientLockerRepository.findAll().stream()
                 .filter(l -> l.getLocker().isAWomenLocker() == isAWoman)
                 .collect(Collectors.toList());
@@ -213,18 +213,18 @@ public class ClientLockerService {
     public boolean existsById(Long idClient) {
         Client clientByUserId = clientRepository.findClientByUserId(idClient);
 
-        if (clientByUserId == null){
+        if (clientByUserId == null) {
             return false;
         }
         return true;
 
     }
 
-    public boolean stillTraining(Long idClient){
+    public boolean stillTraining(Long idClient) {
 
         return getACLDto().stream()
-                .filter(c -> c.getGoHome()==null)
-                .anyMatch(c->c.getIdClient().equals(idClient));
+                .filter(c -> c.getGoHome() == null)
+                .anyMatch(c -> c.getIdClient().equals(idClient));
 
     }
 }

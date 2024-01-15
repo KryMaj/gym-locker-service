@@ -18,7 +18,6 @@ public class ClientLocker {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    //zmiana
     @Column(unique = true)
     private Long clientLockerId;
     private Timestamp entry;
